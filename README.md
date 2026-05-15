@@ -13,7 +13,7 @@ También consta de un menú interactivo para seleccionar las cartas de la mano y
 
 El programa solo corre en la consola y esta hecho con c++ standard por lo que corre en todos los sistemas operativos compilar con: 
 
-"g++ empleado.h empresa.h main.cpp"
+"g++ ..."
 
 - correr en linux: "/a.out"
 - correr en windows: "a.exe"
