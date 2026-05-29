@@ -1,30 +1,33 @@
 #ifndef ENTRENADOR_H_
 #define ENTRENADOR_H_
 
+#include "entidad.h"
 #include <string>
+#include <vector>
+#include <sstream>
 
 class Entrenador {
-private:
-  // Atributos
-  std::string nombre;
-  std::vector<Pokemon> Pokemones;
+    private:
+    // Atributos
+    std::string nombre;
+    std::vector<Pokemon*> Pokemones;
 
-public:
-  //Constructor vacío
-  Entrenador():
-    nombre(""), Pokemones(){};
+    public:
+    //Constructor vacío
+    Entrenador():
+        nombre(""), Pokemones(){}
 
-  //Constructor con parametros
-  Entrenador(std::string n, std::vector<Pokemon> listaPok):
-    nombre(n), Pokemones(listaPok){};
+    //Constructor con parametros
+    Entrenador(std::string n, std::vector<Pokemon*> listaPok):
+        nombre(n), Pokemones(listaPok){}
 
-  //Declarar Getters
-  std::string getNombre();
-  std::string mostrarPokemones();
+    //Declarar Getters
+    std::string getNombre();
+    std::string mostrarPokemones();
 
-  //Declarar Funciones
-  void capturarPokemon(Pokemon p);
-  bool tienePokemonVivo();
+    //Declarar Funciones
+    void capturarPokemon(Pokemon* p);
+    bool tienePokemonVivo();
 
 };
 
@@ -37,19 +40,20 @@ std::string Entrenador::mostrarPokemones(){
         aux << "Pokemones de " << nombre << "\n";
         // Usamos un ciclo para recorrer el vector
         for (int i = 0; i < Pokemones.size(); ++i) {
-            aux << i + 1 << ". " << Pokemones[i].getNombre()
-               << " (" << Pokemones[i].getTipo() << ")\n";
+            aux << i + 1 << ". " << Pokemones[i]->getNombrePokemon()
+               << " (" << Pokemones[i]->getTipo() << ")"
+              << " Con" << Pokemones[i]->getVidaActual() << "puntos de vida! \n";
         }
         return aux.str();
 }
 
 //Funciones
-void Entrenador::capturarPokemon(Pokemon p) {
+void Entrenador::capturarPokemon(Pokemon* p) {
     Pokemones.push_back(p);
 }
 bool Entrenador::tienePokemonVivo() {
     for (int i = 0; i < Pokemones.size(); ++i) {
-        if (Pokemones[i].getVidaActual() > 0) {
+        if (Pokemones[i]->getVidaActual() > 0) {
             return true;
         }
     }
