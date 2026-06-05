@@ -28,6 +28,7 @@ class Entrenador {
     //Declarar Funciones
     void capturarPokemon(Pokemon* p);
     bool tienePokemonVivo();
+    std::vector<Pokemon*> getPokemones();
 
 };
 
@@ -42,7 +43,7 @@ std::string Entrenador::mostrarPokemones(){
         for (int i = 0; i < Pokemones.size(); ++i) {
             aux << i + 1 << ". " << Pokemones[i]->getNombrePokemon()
                << " (" << Pokemones[i]->getTipo() << ")"
-              << " Con" << Pokemones[i]->getVidaActual() << "puntos de vida! \n";
+              << " Con " << Pokemones[i]->getVidaActual() << " puntos de vida! \n";
         }
         return aux.str();
 }
@@ -58,6 +59,9 @@ bool Entrenador::tienePokemonVivo() {
         }
     }
     return false;
+}
+std::vector<Pokemon*> Entrenador::getPokemones() {
+    return Pokemones;
 }
 
 #endif //ENTRENADOR_H_
