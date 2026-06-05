@@ -7,72 +7,124 @@
 #include "entidad.h"
 #include <iostream>
 
+// Los movimientos son globales por conveniencia
+Movimiento* llamarada = new Ataque  ("Llamarada",  80);
+Movimiento* refugio = new Defensa ("Refugio", 20);
+
+Movimiento* surf = new Ataque  ("Surf", 70);
+Movimiento* recuperar = new Curacion("Recuperar", 40);
+
+Movimiento* latigo = new Ataque  ("Latigo", 60);
+Movimiento* pantalla  = new Defensa ("Pantalla", 10);
+
+// Funciones que ayuden a la partida (main)
+std::string iniciarPartida(){
+    std::string nombre;
+    std::cout << "¡Felicidades, el dia de hoy empezaras tu viaje como entrenador Pokemon!"
+    << " Antes de escoger tu pokemon ¿Cómo te llamas? \n";
+    std::cin >> nombre;
+    return nombre;
+}
+
+std::string nombrarAmigo(){
+    std::string nombre;
+    std::cout << "Tu primera batalla sera con tu mejor amigo."
+    << " ¿Cómo se llama tu mejor amigo? \n";
+    std::cin >> nombre;
+    return nombre;
+}
+
+void escogerPokemon(Entrenador* jugador){
+    int opcion = 0;
+        while (opcion < 1 || opcion > 3) {
+            std::cout << "\nEscoge tu primer pokemon:\n(1) Charizard\n(2) Squirtle\n(3) Bulbasaur\nOpción:\n";
+            std::cin >> opcion;
+            if (opcion < 1 || opcion > 3) {
+                std::cout << "Opción inválida. Intenta de nuevo.\n";
+        }
+    }
+    if (opcion == 1){
+        jugador->capturarPokemon(new Pokemon("Charmander", "Fuego",  150, {llamarada, refugio}));
+    }
+    else if (opcion == 2){
+        jugador->capturarPokemon(new Pokemon("Squirtle", "Agua", 120, {surf, recuperar}));
+    }
+    else{
+        jugador->capturarPokemon(new Pokemon("Bulbasaur", "Planta", 130, {latigo, pantalla}));
+    }
+}
+
+void turno(Entrenador* jugador, Entrenador* rival) {
+    // Por simplicidad, como solo hay un pokemon se escoge el primero
+    Pokemon* miPok = jugador->getPokemones()[0];
+    Pokemon* rivPok = rival->getPokemones()[0];
+
+    std::cout << " \n¡Turno de " << jugador->getNombre() << "! \n";
+    std::cout << jugador->mostrarPokemones();
+    std::cout << rival->mostrarPokemones();
+    std::cout << "Selecciona un movimiento:\n";
+    std::cout << miPok->mostrarMovimientos();
+    std::cout << "Opción: ";
+
+    int seleccion = 0;
+
+        // Validación, pero solo entre 1 y 2 debido a que solo
+        // hay dos movimientos por pokemon (en esta simulación)
+        while (seleccion < 1 || seleccion > 2) {
+            std::cin >> seleccion;
+            if (seleccion < 1 || seleccion > 2) {
+                std::cout << "Opción inválida. Intenta de nuevo.\n";
+            }
+        }
+
+    Movimiento* movElegido = miPok->getMovimientos()[seleccion - 1];
+
+    /*
+     * Si elige 1 el objetivo es el rival y si elige 2 se lo aplica a sí mismo
+     * Esto es pq en movimientos el segundo es de apoyo y el primero de Ataque
+     * en esta (simulación)
+     */
+
+    if (seleccion == 1) {
+        miPok->usarMovimiento(movElegido, rivPok);
+    } else {
+        miPok->usarMovimiento(movElegido, miPok);
+    }
+
+    // Si el oponente se debilita, terminamos el turno inmediatamente
+    if (!rivPok->estaVivo()) {
+        std::cout << "\n¡El " << rivPok->getNombrePokemon() << " de " << rival->getNombre() << " se ha debilitado!\n";
+        return;
+    }
+
+    // Turno del rival
+    std::cout << "¡Turno de " << rival->getNombre() << "!" << "\n";
+    Movimiento* movRival = rivPok->getMovimientos()[0]; // Solo ataca
+    rivPok->usarMovimiento(movRival, miPok);
+
+    if (!miPok->estaVivo()) {
+        std::cout << "\n¡Tu " << miPok->getNombrePokemon() << " se ha debilitado!\n";
+    }
+}
+
 int main() {
+    // Inicializaciones
+    std::string nombreJugador = iniciarPartida();
+    Entrenador* Jugador  = new Entrenador(nombreJugador,  {});
+    escogerPokemon(Jugador);
+    std::string nombreAmigo = nombrarAmigo();
+    Entrenador* mejorAmigo = new Entrenador(nombreAmigo, {new Pokemon("Piplup", "Agua", 120, {surf, recuperar})});
 
-    // Movimientos
-    Movimiento* llamarada = new Ataque  ("Llamarada",   "Fuego",  80);
-    Movimiento* refugio   = new Defensa ("Refugio",     "Normal", 30);
+    while (Jugador->tienePokemonVivo() && mejorAmigo->tienePokemonVivo()) {
+            turno(Jugador, mejorAmigo);
+        }
 
-    Movimiento* surfear   = new Ataque  ("Surf",        "Agua",   70);
-    Movimiento* recuperar = new Curacion("Recuperar",   "Normal", 40);
-
-    Movimiento* latigo    = new Ataque  ("Latigo Cepa", "Planta", 65);
-    Movimiento* pantalla  = new Defensa ("Pantalla",    "Normal", 25);
-
-    // Pokemones
-    Pokemon* charizard = new Pokemon("Charizard", "Fuego",  150, {llamarada, refugio});
-    Pokemon* piplup    = new Pokemon("Piplup",    "Agua",   120, {surfear,   recuperar});
-    Pokemon* bulbasaur = new Pokemon("Bulbasaur", "Planta", 130, {latigo,    pantalla});
-
-    // Entrenadores
-    Entrenador* ash  = new Entrenador("Ash",  {charizard, bulbasaur});
-    Entrenador* gary = new Entrenador("Gary", {piplup});
-
-    // Estado inicial
-    std::cout << "Estado inicial\n";
-    std::cout << ash->mostrarPokemones();
-    std::cout << gary->mostrarPokemones();
-
-    // Combate de prueba
-    std::cout << "\nCombate! \n";
-
-    // Fuego vs agua, no efectvo
-    charizard->usarMovimiento(llamarada, piplup);
-
-    // Probar si si jala el ganar escudo
-    charizard->usarMovimiento(refugio, charizard);
-
-    // Agua vs fuego, efectivo
-    piplup->usarMovimiento(surfear, charizard);
-
-    // Piplup se cura
-    piplup->usarMovimiento(recuperar, piplup);
-
-    // Planta vs agua efectivo
-    bulbasaur->usarMovimiento(latigo, piplup);
-
-    // 6. Estado final
-    std::cout << "\nEstado Final \n";
-    std::cout << ash->mostrarPokemones();
-    std::cout << gary->mostrarPokemones();
-
-    std::cout << "¿Ash tiene pokemon vivo?  " << (ash->tienePokemonVivo()  ? "Si" : "No") << "\n";
-    std::cout << "¿Gary tiene pokemon vivo? " << (gary->tienePokemonVivo() ? "Si" : "No") << "\n";
-
-    // Liberar memoria
-    delete ash;
-    delete gary;
-
-    delete charizard;
-    delete piplup;
-    delete bulbasaur;
-
-    delete llamarada;
-    delete refugio;
-    delete surfear;
-    delete recuperar;
-    delete latigo;
-    delete pantalla;
+        // Declarar ganador
+        if (Jugador->tienePokemonVivo()) {
+            std::cout << "¡Felicidades " << Jugador->getNombre() << ", ganaste tu primera batalla!\n";
+        } else {
+            std::cout << "¡Fin del juego! " << mejorAmigo->getNombre() << " te ha superado esta vez...\n";
+        }
 
     return 0;
 }
