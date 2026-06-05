@@ -1,19 +1,25 @@
-# TC1030_Proyecto 
-Este proyecto trata sobre un sistema de batalla de cartas entre un Jugador y un Jefe. Genera una estructura de clases para manejar diferentes tipos de cartas: Cartas de ataque (restan vida al jefe), cartas de defensa (suman escudo al jugador) y cartas de curación (restan daño recibido). Cada turno el jugador tendra una nueva carta que pueda usar y tras acabar su turno agregara una carta al azar al usuario.
+# TC1030_Proyecto - Pokémon
+Este proyecto consiste en un sistema de batalla Pokémon en consola. El sistema cuenta con una estructura de clases que gestiona Entrenadores y Pokémon. Los Pokémon pueden aprender distintos tipos de Movimientos heredados: Ataque (hacen daño con multiplicadores por tipo), Defensa (generan un escudo para mitigar golpes) y Curación (recuperan vida actual).
 
 ## Funcionalidad
-El programa gestiona el flujo de la batalla, permitiendo al usuario elegir sus acciones desde su mano:
-- Acciones de Ataque: Reducen la vida del jefe.
-- Acciones de Defensa: Aumentan el escudo para mitigar golpes.
-- Acciones de Curación: Recuperan salud perdida.
+El programa gestiona el flujo de la batalla por turnos, permitiendo al Entrenador elegir las acciones de su Pokémon desde su lista de movimientos:
+- Movimientos de Ataque
+- Movimientos de Defensa
+- Movimientos de Curación
 
-También consta de un menú interactivo para seleccionar las cartas de la mano y mostrar el estado de la batalla en la consola.
+También consta de un menú interactivo en consola para mostrar el estado de la batalla (vida, escudos y movimientos disponibles).
+
+## Casos donde el código podría fallar
+
+1. **Pokémon Derrotados:** Realmente nunca se quita los Pokemón derrotados, por lo que siguen en el vector dentro de entrenador, lo que podría causar problemas de lógica.
+2. **Sensibilidad a Mayúsculas:** El cálculo de ventajas y descentajas por el tipo del Pokemón depende de comparaciones de texto ("Fuego", "Agua", "Planta").
 
 ## Consideraciones
 
-El programa solo corre en la consola y esta hecho con c++ standard por lo que corre en todos los sistemas operativos compilar con: 
+El programa solo corre en la consola y está hecho con C++ estándar, por lo que funciona en todos los sistemas operativos. 
 
-"g++ ..."
+Para compilar, usa el siguiente comando en tu terminal:
 
+g++ main.cpp
 - correr en linux: "/a.out"
 - correr en windows: "a.exe"
