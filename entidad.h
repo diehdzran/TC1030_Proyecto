@@ -61,7 +61,7 @@ bool Entidad::estaVivo() {
     return vidaActual > 0;
 }
 
-//Clase hija
+// Clase hija
 // Solo existira Charizard, Piplup y Bulbasaur
 class Pokemon : public Entidad{
     private:
@@ -81,6 +81,7 @@ class Pokemon : public Entidad{
     void resetearEscudo();
     std::string mostrarMovimientos();
     void usarMovimiento(Movimiento* mov, Pokemon* objetivo);
+    std::vector<Movimiento*> getMovimientos();
 };
 //Getter
 int Pokemon::getEscudo() { return escudo; }
@@ -100,7 +101,7 @@ std::string Pokemon::mostrarMovimientos() {
     // Usamos un ciclo para recorre
     for (size_t i = 0; i < movimientos.size(); i++) {
         aux << i + 1 << ". " << movimientos[i]->getNombre()
-           << " (" << movimientos[i]->getTipo() << ")\n";
+           << " (" << movimientos[i]->getTipoMov() << ")\n";
     }
     return aux.str();
 }
@@ -109,34 +110,52 @@ void Pokemon::usarMovimiento(Movimiento* mov, Pokemon* objetivo) {
     std::cout << "¡" << nombrePokemon << " uso " << mov->getNombre() << "!" << "\n";
     // La logica aqui es, como tiene metodos virtuales que regresan 0, si no regresa
     // 0 significa que es un movimiento de ese tipo
-    // 1. Lógica de daño
+    // 1. Daño
     if (mov->getDano() > 0) {
         float multiplicador = 1.0;
 
-        if (mov->getTipo() == "Fuego" && objetivo->getTipo() == "Planta") { multiplicador = 2.0; std::cout << "¡Es super efectivo!" << "\n"; }
-        else if (mov->getTipo() == "Fuego" && objetivo->getTipo() == "Agua") { multiplicador = 0.5; std::cout << "No es muy efectivo..." << "\n"; }
-        else if (mov->getTipo() == "Agua" && objetivo->getTipo() == "Fuego") { multiplicador = 2.0; std::cout << "¡Es super efectivo!" << "\n"; }
-        else if (mov->getTipo() == "Agua" && objetivo->getTipo() == "Planta") { multiplicador = 0.5; std::cout << "No es muy efectivo..." << "\n"; }
-        else if (mov->getTipo() == "Planta" && objetivo->getTipo() == "Agua") { multiplicador = 2.0; std::cout << "¡Es super efectivo!" << "\n"; }
-        else if (mov->getTipo() == "Planta" && objetivo->getTipo() == "Fuego") { multiplicador = 0.5; std::cout << "No es muy efectivo..." << "\n"; }
+        if (getTipo() == "Fuego" && objetivo->getTipo() == "Planta")
+        { multiplicador = 2.0; std::cout << "¡Es super efectivo!" << "\n"; }
+
+        else if (getTipo() == "Fuego" && objetivo->getTipo() == "Agua")
+        { multiplicador = 0.5; std::cout << "No es muy efectivo..." << "\n"; }
+
+        else if (getTipo() == "Agua" && objetivo->getTipo() == "Fuego")
+        { multiplicador = 2.0; std::cout << "¡Es super efectivo!" << "\n"; }
+
+        else if (getTipo() == "Agua" && objetivo->getTipo() == "Planta")
+        { multiplicador = 0.5; std::cout << "No es muy efectivo..." << "\n"; }
+
+        else if (getTipo() == "Planta" && objetivo->getTipo() == "Agua")
+        { multiplicador = 2.0; std::cout << "¡Es super efectivo!" << "\n"; }
+
+        else if (getTipo() == "Planta" && objetivo->getTipo() == "Fuego")
+        { multiplicador = 0.5; std::cout << "No es muy efectivo..." << "\n"; }
 
         int danoFinal = mov->getDano() * multiplicador;
+        if (objetivo->getEscudo() > 0) {
+            danoFinal = danoFinal / (1+ 0.1 * objetivo->getEscudo());
+        }
         objetivo->recibirDano(danoFinal);
-        std::cout << "¡El enemigo " << objetivo->getNombrePokemon() << " recibio " << danoFinal << " puntos de daño!" << "\n";
+        std::cout << "¡" << objetivo->getNombrePokemon() << " recibio " << danoFinal << " puntos de daño!" << "\n";
     }
 
-    // 2. Lógica de escudo
+    // 2. Escudo
     if (mov->getPuntosEscudo() > 0) {
         ganarEscudo(mov->getPuntosEscudo());
         std::cout << "¡El escudo de " << nombrePokemon << " aumento en " << mov->getPuntosEscudo() << " puntos!" << "\n";
     }
 
-    // 3. Lógica de curacion
+    // 3. Curacion
     if (mov->getPuntosCuracion() > 0) {
         sanar(mov->getPuntosCuracion());
         std::cout << "¡" << nombrePokemon << " se curo " << mov->getPuntosCuracion() << " puntos de vida!" << "\n";
         std::cout << "Vida actual de " << nombrePokemon << ": " << vidaActual << "\n";
     }
 }
+std::vector<Movimiento*> Pokemon::getMovimientos() {
+    return movimientos;
+}
 
 #endif //ENTIDAD_H_
+
