@@ -1,7 +1,15 @@
+/*
+ * Proyecto Pokemon
+ * Diego Hernández Rangel
+ * A01710524
+ * Aqui se define la clase entrenador
+ * que tiene varios pokemones
+ */
+
 #ifndef ENTRENADOR_H_
 #define ENTRENADOR_H_
 
-#include "entidad.h"
+#include "pokemon.h"
 #include <string>
 #include <vector>
 #include <sstream>
@@ -36,6 +44,8 @@ class Entrenador {
 std::string Entrenador::getNombre(){
     return nombre;
 }
+
+//Guardar la lista de pokemones en un string
 std::string Entrenador::mostrarPokemones(){
     std::stringstream aux;
         aux << "Pokemones de " << nombre << "\n";
@@ -49,9 +59,12 @@ std::string Entrenador::mostrarPokemones(){
 }
 
 //Funciones
+// Agregar un nuevo pokemon al vector de pokemones
 void Entrenador::capturarPokemon(Pokemon* p) {
     Pokemones.push_back(p);
 }
+
+//Regresa true si hay algun pokemon con vida mayor a 0
 bool Entrenador::tienePokemonVivo() {
     for (int i = 0; i < Pokemones.size(); ++i) {
         if (Pokemones[i]->getVidaActual() > 0) {
@@ -60,6 +73,8 @@ bool Entrenador::tienePokemonVivo() {
     }
     return false;
 }
+
+//Para poder usar pokemones es necesario tener acceso al vector
 std::vector<Pokemon*> Entrenador::getPokemones() {
     return Pokemones;
 }
