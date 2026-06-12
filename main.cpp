@@ -4,7 +4,7 @@
  */
 #include "entrenador.h"
 #include "movimiento.h"
-#include "entidad.h"
+#include "pokemon.h"
 #include <iostream>
 
 // Los movimientos son globales por conveniencia
@@ -18,6 +18,7 @@ Movimiento* latigo = new Ataque  ("Latigo", 60);
 Movimiento* pantalla  = new Defensa ("Pantalla", 10);
 
 // Funciones que ayuden a la partida (main)
+// Iniciar la partida preguntando por el nombre del jugador
 std::string iniciarPartida(){
     std::string nombre;
     std::cout << "¡Felicidades, el dia de hoy empezaras tu viaje como entrenador Pokemon!"
@@ -26,6 +27,7 @@ std::string iniciarPartida(){
     return nombre;
 }
 
+// Nombrar al amigo (rival)
 std::string nombrarAmigo(){
     std::string nombre;
     std::cout << "Tu primera batalla sera con tu mejor amigo."
@@ -34,10 +36,11 @@ std::string nombrarAmigo(){
     return nombre;
 }
 
+// En esta simulación solo se escogera un pokemon
 void escogerPokemon(Entrenador* jugador){
     int opcion = 0;
         while (opcion < 1 || opcion > 3) {
-            std::cout << "\nEscoge tu primer pokemon:\n(1) Charizard\n(2) Squirtle\n(3) Bulbasaur\nOpción:\n";
+            std::cout << "\nEscoge tu primer pokemon:\n(1) Charmander\n(2) Squirtle\n(3) Bulbasaur\nOpción:\n";
             std::cin >> opcion;
             if (opcion < 1 || opcion > 3) {
                 std::cout << "Opción inválida. Intenta de nuevo.\n";
@@ -54,6 +57,8 @@ void escogerPokemon(Entrenador* jugador){
     }
 }
 
+// Funcion que estara en bucle despues
+// Lógica de turnos por jugador y rival
 void turno(Entrenador* jugador, Entrenador* rival) {
     // Por simplicidad, como solo hay un pokemon se escoge el primero
     Pokemon* miPok = jugador->getPokemones()[0];
