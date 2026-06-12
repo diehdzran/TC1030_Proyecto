@@ -37,13 +37,22 @@ public:
   virtual std::string getTipoMov()=0;
 };
 
-int Movimiento::getDano() { return 0; }
-int Movimiento::getPuntosEscudo() { return 0; }
-int Movimiento::getPuntosCuracion() { return 0; }
-
-
 //Getters
-std::string Movimiento::getNombre() { return nombre; }
+std::string Movimiento::getNombre() {
+    return nombre;
+}
+
+//Getters que seran sobreescritos dependiendo
+// de la clase hija
+int Movimiento::getDano() {
+    return 0;
+}
+int Movimiento::getPuntosEscudo() {
+    return 0;
+}
+int Movimiento::getPuntosCuracion() {
+    return 0;
+}
 
 //Clase de ataque
 class Ataque : public Movimiento{
@@ -61,12 +70,15 @@ class Ataque : public Movimiento{
     int getDano();
 
     // Sobrescritura de la funcion abstracta
-    virtual std::string getTipoMov();
+    std::string getTipoMov();
 };
+
+//Tipo de movimiento (Sobrescritura)
 std::string Ataque::getTipoMov(){
     return "Ataque";
 }
 
+//Getter (sobreescritura)
 int Ataque::getDano(){
     return dano;
 }
@@ -87,12 +99,15 @@ public:
     int getPuntosEscudo();
 
     //Sobrescritura de la funcion abstracta
-    virtual std::string getTipoMov();
+    std::string getTipoMov();
 };
+
+//Tipo de movimiento (sobreescritura)
 std::string Defensa::getTipoMov(){
     return "Defensa";
 }
 
+//Getter (sobreescritura)
 int Defensa::getPuntosEscudo(){
     return puntosEscudo;
 }
@@ -113,12 +128,15 @@ public:
     int getPuntosCuracion();
 
     //Sobrescritura de la funcion abstracta
-    virtual std::string getTipoMov();
+    std::string getTipoMov();
 };
+
+//Tipo de movimiento (sobreescritura)
 std::string Curacion::getTipoMov(){
     return "Curación";
 }
 
+//Getter (sobreescritura)
 int Curacion::getPuntosCuracion(){
     return puntosCuracion;
 }
