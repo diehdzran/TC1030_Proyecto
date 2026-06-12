@@ -1,5 +1,13 @@
-#ifndef ENTIDAD_H_
-#define ENTIDAD_H_
+/*
+ * Proyecto Pokemon
+ * Diego Hernández Rangel
+ * A01710524
+ * Aqui se define la clase pokemon como
+ * hija de entidad para separar funciones
+ */
+
+#ifndef POKEMON_H_
+#define POKEMON_H_
 #include "movimiento.h"
 #include <string>
 #include <vector>
@@ -38,11 +46,15 @@ std::string Entidad::getNombrePokemon() {
 std::string Entidad::getTipo() {
     return tipo;
 }
-int Entidad::getVidaMax() { return vidaMax; }
-int Entidad::getVidaActual() { return vidaActual; }
+int Entidad::getVidaMax() {
+    return vidaMax;
+}
+int Entidad::getVidaActual() {
+    return vidaActual;
+}
 
 //Funciones
-// Resta vida a esta entidad y evita qu
+// Resta vida a esta entidad y evita que sea menos de 0
 void Entidad::recibirDano(int d) {
     vidaActual -= d;
     if (vidaActual < 0) {
@@ -56,7 +68,7 @@ void Entidad::sanar(int s) {
         vidaActual = vidaMax;
     }
 }
-// Devuelve true si tiene más de 0 de
+// Devuelve true si tiene más de 0 de vida
 bool Entidad::estaVivo() {
     return vidaActual > 0;
 }
@@ -84,17 +96,22 @@ class Pokemon : public Entidad{
     std::vector<Movimiento*> getMovimientos();
 };
 //Getter
-int Pokemon::getEscudo() { return escudo; }
+int Pokemon::getEscudo() {
+    return escudo;
+}
 
 //Funciones
+// Funcio para que el pokemon gane escudo
 void Pokemon::ganarEscudo(int e) {
     escudo += e;
 }
 
+//Funcion que vuelve el escudo a 0
 void Pokemon::resetearEscudo() {
     escudo = 0;
 }
 
+//Guardar en string la lista de movimientos
 std::string Pokemon::mostrarMovimientos() {
     std::stringstream aux;
     aux << "Movimientos de " << nombrePokemon << ":\n";
@@ -106,6 +123,8 @@ std::string Pokemon::mostrarMovimientos() {
     return aux.str();
 }
 
+//Pokemon usa un movimiento contra otro pokemon, aqui se usa la clase
+// Movimiento (polimorfismo)
 void Pokemon::usarMovimiento(Movimiento* mov, Pokemon* objetivo) {
     std::cout << "¡" << nombrePokemon << " uso " << mov->getNombre() << "!" << "\n";
     // La logica aqui es, como tiene metodos virtuales que regresan 0, si no regresa
@@ -153,9 +172,10 @@ void Pokemon::usarMovimiento(Movimiento* mov, Pokemon* objetivo) {
         std::cout << "Vida actual de " << nombrePokemon << ": " << vidaActual << "\n";
     }
 }
+
+//Para poder usar los movimientos del pokemon se tiene que acceder a estos
 std::vector<Movimiento*> Pokemon::getMovimientos() {
     return movimientos;
 }
 
-#endif //ENTIDAD_H_
-
+#endif //POKEMON_H_
